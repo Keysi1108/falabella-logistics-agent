@@ -1,32 +1,58 @@
-FROM node:18-alpine
+FROM node:18-bullseye
 
 WORKDIR /app
 
 # Instalar dependencias del sistema para Playwright
-RUN apk add --no-cache \
-    chromium \
-    nss \
-    freetype \
-    freetype-dev \
-    harfbuzz \
+RUN apt-get update && apt-get install -y \
+    wget \
+    gnupg \
     ca-certificates \
-    ttf-freefont
-
-# Configurar Playwright para usar Chromium del sistema
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
-    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+    procps \
+    libxss1 \
+    libgconf-2-4 \
+    libxrandr2 \
+    libasound2 \
+    libpangocairo-1.0-0 \
+    libatk1.0-0 \
+    libcairo-gobject2 \
+    libgtk-3-0 \
+    libgdk-pixbuf2.0-0 \
+    libxcomposite1 \
+    libxcursor1 \
+    libxdamage1 \
+    libxext6 \
+    libxfixes3 \
+    libxi6 \
+    libxrender1 \
+    libxtst6 \
+    libxss1 \
+    libdrm2 \
+    libxkbcommon0 \
+    libatspi2.0-0 \
+    libdrm2 \
+    libxkbcommon0 \
+    libatspi2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copiar package.json
 COPY package*.json ./
 
-# Instalar dependencias
+# Instalar dependencias de Node.js
 RUN npm install
+
+# Instalar Playwright browsers
+RUN npx playwright install chromium
+RUN npx playwright install-deps chromium
 
 # Copiar código fuente
 COPY . .
 
+# Variables de entorno para Playwright
+ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+ENV PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS=true
+
 # Exponer puerto
-EXPOSE 3000
+EXPOSE 8080
 
 # Comando de inicio
 CMD ["node", "server.js"]
