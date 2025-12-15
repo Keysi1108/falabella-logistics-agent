@@ -61,7 +61,7 @@ app.use((error, req, res, next) => {
     });
 });
 
-const server = app.listen(PORT, '0.0.0.0', () => {
+const server = app.listen(PORT, () => {
     console.log(`🚀 Falabella Logistics Agent iniciado`);
     console.log(`📊 Servidor corriendo en puerto ${PORT}`);
     console.log(`🌐 Entorno: ${process.env.NODE_ENV || 'development'}`);
