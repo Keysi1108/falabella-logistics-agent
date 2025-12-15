@@ -24,7 +24,7 @@ app.use((req, res, next) => {
 });
 
 // Importar rutas del agente
-const agentRoutes = require('./routes/agent');
+const agentRoutes = require('./routes/agent-simple');
 
 // Rutas API
 app.use('/api/agent', agentRoutes);
@@ -85,4 +85,5 @@ process.on('SIGINT', () => {
     });
 
 });
+
 
